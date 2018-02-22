@@ -75,10 +75,60 @@ def kassa_home():
 
 
 @app.route('/kassa/transacties', methods=["GET", "POST"])
-def kassa_trans():
-    return render_template('kassa_trans.html')
+def kassa_coins():
+    return render_template('kassa_coins.html')
 
 
+@app.route('/kassa/transacties/countcoins', methods=["GET", "POST"])
+def countcoins():
+    in1 = request.form['in1'];
+    in2 = request.form['in2'];
+    in3 = request.form['in3'];
+    in4 = request.form['in4'];
+    in5 = request.form['in5'];
+    in6 = request.form['in6'];
+
+    out1 = round(int(in1) * 2.50, 2);
+    out2 = round(int(in2) * 1.00, 2);
+    out3 = round(int(in3) * 0.25, 2);
+    out4 = round(int(in4) * 0.10, 2);
+    out5 = round(int(in5) * 0.05, 2);
+    out6 = round(int(in6) * 0.01, 2);
+
+    tot = out1 + out2 + out3 + out4 + out5 + out6
+    tot = str(round(tot, 2))
+
+    try:
+        ses_id = str(session['id'])
+        cursor = mysql.connect.cursor()
+        today = datetime.datetime.now().date()
+        date = str(today)
+        cursor.execute(
+                "SELECT COUNT(*) from coin where date='" + date + "' AND user_id='" + ses_id + "'")
+        result = cursor.fetchone()
+        number_of_rows = result[0]
+
+        if number_of_rows == 0:
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO coin (user_id, 1cent, 5cent, 10cent, 25cent, 100cent, 250cent,total, date)"
+                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (ses_id, in6, in5, in4, in3, in2, in1, tot, date))
+            mysql.connection.commit()
+            return render_template('kassa_coins.html', out1=out1, out2=out2, out3=out3,
+                                   out4=out4, out5=out5, out6=out6, tot=tot)
+        else:
+            cur = mysql.connection.cursor()
+            cur.execute("""
+               UPDATE coin
+               SET 1cent=1cent+%s, 5cent=5cent+%s, 10cent=10cent+%s, 25cent=25cent+%s, 100cent=100cent+%s, 
+               250cent=250cent+%s,total=total+%s
+               WHERE user_id=%s AND date=%s""",
+                        (in6, in5, in4, in3, in2, in1, tot, ses_id, date))
+            mysql.connection.commit()
+            return render_template('kassa_coins.html', out1=out1, out2=out2, out3=out3,
+                                   out4=out4, out5=out5, out6=out6, tot=tot)
+    except Exception as e:
+        return redirect(url_for('kassa_home'))
 
 
 if __name__ == '__main__':
