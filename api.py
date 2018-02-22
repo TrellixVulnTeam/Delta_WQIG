@@ -60,6 +60,81 @@ def manager_home():
         return 'nope'
 
 
+@app.route('/manager/coins')
+def manager_coins():
+    return render_template('manager_coins.html')
+
+
+@app.route('/manager/clienten')
+def manager_clients():
+    if 'id' in session:
+        if session['level'] == 1:
+            try:
+                cursor = mysql.connect.cursor()
+                cursor.execute("""SELECT clients.id, clients.name, clients.surname, accounts.account_number, accounts.amount
+                               FROM clients
+                               INNER JOIN accounts
+                               ON clients.id = accounts.client_id
+                               """)
+                data = cursor.fetchall()
+                return render_template('manager_clients.html', data=data)
+            except Exception as e:
+                return render_template('manager_clients.html', error = str(e))
+        else:
+            return 'geen access'
+    else:
+        return 'nope'
+
+
+@app.route('/manager/clienten/toevoegen', methods=["GET", "POST"])
+def addClient():
+    if request.method == 'POST':
+        name = request.form['naam']
+        surname = request.form['achternaam']
+        accountnummer = request.form['rekening']
+
+        cursor = mysql.connect.cursor()
+        cursor.execute("SELECT * FROM clients WHERE name ='" + name + "' AND surname ='" + surname + "'")
+        account = cursor.fetchall()
+        res_list = [x[0] for x in account]  #Hoeveel rows
+
+        if len(account) is 1:
+            cur = mysql.connection.cursor()
+            client_id = str(res_list).strip('[]')
+            cursor.execute("SELECT COUNT(*) from accounts where client_id='" + client_id + "'")  #Check
+            result = cursor.fetchall()
+            res_list = [x[0] for x in result]  #Hoeveel rows
+
+            if len(result) is 1:
+                if str(res_list) == '[2]':
+                    return redirect(url_for('manager_clients'))
+                else:
+                    cur.execute('''INSERT INTO accounts (client_id, account_number ) VALUES (%s, %s)''', (client_id, accountnummer))
+                    mysql.connection.commit()
+                    return redirect(url_for('manager_clients'))
+            else:
+                cur.execute('''INSERT INTO accounts (client_id, account_number ) VALUES (%s, %s)''', (client_id, accountnummer))
+                mysql.connection.commit()
+                return redirect(url_for('manager_clients'))
+
+        elif len(account) is 0:
+            cur = mysql.connection.cursor()
+            cur.execute('''INSERT INTO clients (name, surname) VALUES (%s, %s)''', (name, surname))
+            mysql.connection.commit()
+
+            client_id = cur.lastrowid
+            cur.execute('''INSERT INTO accounts (client_id, account_number ) VALUES (%s, %s)''', (client_id, accountnummer))
+            mysql.connection.commit()
+            return redirect(url_for('manager_clients'))
+    else:
+        return render_template('clienten.html')
+
+
+@app.route('/manager/transacties')
+def manager_trans():
+    return render_template('manager_trans.html')
+
+
 @app.route('/kassa', methods=["GET", "POST"])
 def kassa_home():
     if 'id' in session:
@@ -74,12 +149,12 @@ def kassa_home():
         return 'nope'
 
 
-@app.route('/kassa/transacties', methods=["GET", "POST"])
+@app.route('/kassa/coins')
 def kassa_coins():
     return render_template('kassa_coins.html')
 
 
-@app.route('/kassa/transacties/countcoins', methods=["GET", "POST"])
+@app.route('/kassa/coins/countcoins', methods=["GET", "POST"])
 def countcoins():
     in1 = request.form['in1'];
     in2 = request.form['in2'];
@@ -129,6 +204,95 @@ def countcoins():
                                    out4=out4, out5=out5, out6=out6, tot=tot)
     except Exception as e:
         return redirect(url_for('kassa_home'))
+
+
+@app.route('/kassa/transacties')
+def kassa_trans():
+    return render_template('kassa_trans.html')
+
+
+@app.route('/kassa/transacties/storten', methods=["GET", "POST"])
+def kassa_storten():
+    if 'id' in session:
+        if session['level'] == 2:
+            account = str(request.form['rekening'])
+            amount = str(request.form['bedrag'])
+            today = datetime.datetime.today()
+            date = str(today)
+            type = '1'
+            try:
+
+                cursor = mysql.connection.cursor()
+                cursor.execute("SELECT COUNT(*) from accounts where account_number='" + account + "'")
+                result = cursor.fetchone()
+                number_of_rows = result[0]
+                if number_of_rows == 1:
+                    cursor.execute("SELECT saldo,account_id,client_id FROM accounts WHERE account_number ='" + account + "'")
+                    data = cursor.fetchone()
+                    calc = data[0] + int(amount)
+
+                    if calc < 0:
+                        return 'Nope'
+                    else:
+                        cur = mysql.connection.cursor()
+                        cur.execute("""UPDATE accounts SET saldo=%s WHERE account_number=%s""",
+                                    (calc, account))
+                        mysql.connection.commit()
+                        cur.execute('''INSERT INTO transactions (amount, client_id, account_id, type, date) 
+                           VALUES (%s, %s,%s,%s,%s)''',
+                                    (amount, data[2], data[1], type, date))
+                        mysql.connection.commit()
+                        return render_template('kassa_trans.html')
+                else:
+                    return 'No deh'
+            except Exception as e:
+                return e
+        else:
+            return 'geen acces'
+    else:
+        return 'nope'
+
+
+@app.route('/kassa/transacties/opname', methods=["GET", "POST"])
+def kassa_opname():
+    if 'id' in session:
+        if session['level'] == 2:
+            account = str(request.form['rekening'])
+            amount = str(request.form['bedrag'])
+            today = datetime.datetime.today()
+            date = str(today)
+            type = '2'
+            try:
+
+                cursor = mysql.connection.cursor()
+                cursor.execute("SELECT COUNT(*) from accounts where account_number='" + account + "'")
+                result = cursor.fetchone()
+                number_of_rows = result[0]
+                if number_of_rows == 1:
+                    cursor.execute("SELECT saldo,account_id,client_id FROM accounts WHERE account_number ='" + account + "'")
+                    data = cursor.fetchone()
+                    calc = data[0] - int(amount)
+
+                    if calc < 0:
+                        return 'Nope'
+                    else:
+                        cur = mysql.connection.cursor()
+                        cur.execute("""UPDATE accounts SET saldo=%s WHERE account_number=%s""",
+                                    (calc, account))
+                        mysql.connection.commit()
+                        cur.execute('''INSERT INTO transactions (amount, client_id, account_id, type, date) 
+                           VALUES (%s, %s,%s,%s,%s)''',
+                                    (amount, data[2], data[1], type, date))
+                        mysql.connection.commit()
+                        return render_template('kassa_trans.html')
+                else:
+                    return 'No deh'
+            except Exception as e:
+                return e
+        else:
+            return 'geen acces'
+    else:
+        return 'nope'
 
 
 if __name__ == '__main__':

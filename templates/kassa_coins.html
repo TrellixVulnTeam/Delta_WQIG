@@ -2,61 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DeltaBank||Transactie </title>
+    <title>DeltaBank||Munten </title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
 
 </head>
-<body>
+<body >
     <header>
         {% include 'nav_kassa.html' %}
     </header>
-<div class="container card col-md-3" style="margin-top: 5%; margin-bottom: 5%; padding: 10px;">
+<div class="container card col-md-4" style="margin-top: 5%; margin-bottom: 5%; padding: 10px; box-shadow: 5px 6px 87px -17px black;">
     <div class="col-md-12">
-        <h3 class="text-center">Transactie</h3>
+        <h3 class="text-center">Registreren</h3>
         <form action="{{url_for('countcoins')}}" method="post">
-            <div class="form-group">
-                <div class="form-row">
-                    <div class="col form-group">
-                        <label>250 centt</label>
-                        <input type="number" min="0" class="form-control" name="in1" placeholder="Aantal 250ct" value="0">
-                        <input type="text" min="0" class="form-control" name="out1" placeholder="Totaal van de 250ct" value="{{out1}}" readonly>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label>250 cent</label>
+                            <input type="number" min="0" class="form-control" name="in1" placeholder="Aantal 250ct" value="0">
+                            <input type="text" min="0" class="form-control" name="out1" placeholder="Totaal van de 250ct" value="{{out1}}" readonly>
+                        </div>
                     </div>
-                 </div>
-                 <div class="form-row">
-                    <div class="col form-group">
-                        <label>100 centt</label>
-                        <input type="number" min="0" class="form-control" name="in2" placeholder="Aantal 100ct" value="0">
-                        <input type="text" min="0" class="form-control" name="out2" placeholder="Totaal van de 100ct" value="{{out2}}" readonly>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label>100 cent</label>
+                            <input type="number" min="0" class="form-control" name="in2" placeholder="Aantal 100ct" value="0">
+                            <input type="text" min="0" class="form-control" name="out2" placeholder="Totaal van de 100ct" value="{{out2}}" readonly>
+                        </div>
                     </div>
-                 </div>
-                 <div class="form-row">
-                    <div class="col form-group">
-                        <label>25ct</label>
-                        <input type="number" min="0" class="form-control" name="in3" placeholder="Aantal 25ct" value="0">
-                        <input type="text" min="0" class="form-control" name="out3" placeholder="Totaal van de 25ct" value="{{out3}}" readonly>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label>25 cent</label>
+                            <input type="number" min="0" class="form-control" name="in3" placeholder="Aantal 25ct" value="0">
+                            <input type="text" min="0" class="form-control" name="out3" placeholder="Totaal van de 25ct" value="{{out3}}" readonly>
+                        </div>
                     </div>
-                 </div>
-                <div class="form-row">
-                    <div class="col form-group">
-                        <label>10ct</label>
-                    <input type="number" min="0" class="form-control" name="in4" placeholder="Aantal 10ct" value="0">
-                    <input type="text" min="0" class="form-control" name="out4" placeholder="Totaal van de 10ct" value="{{out4}}" readonly>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label>10 cent</label>
+                        <input type="number" min="0" class="form-control" name="in4" placeholder="Aantal 10ct" value="0">
+                        <input type="text" min="0" class="form-control" name="out4" placeholder="Totaal van de 10ct" value="{{out4}}" readonly>
+                        </div>
                     </div>
-                 </div>
-                <div class="form-row">
-                    <div class="col form-group">
-                        <label>5ct</label>
-                        <input type="number" min="0" class="form-control" name="in5" placeholder="Aantal 5ct" value="0">
-                        <input type="text" min="0" class="form-control" name="out5" placeholder="Totaal van de 5ct" value="{{out5}}" readonly>
-                    </div>
-                 </div>
-                <div class="form-row">
-                    <div class="col form-group">
-                        <label>1ct</label>
-                        <input type="number" min="0" class="form-control" name="in6" placeholder="Aantal 1ct" value="0">
-                        <input type="text" min="0" class="form-control" name="out6" placeholder="Totaal van de 1ct" value="{{out6}}" readonly>
-                    </div>
-                 </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label>5 cent</label>
+                            <input type="number" min="0" class="form-control" name="in5" placeholder="Aantal 5ct" value="0">
+                            <input type="text" min="0" class="form-control" name="out5" placeholder="Totaal van de 5ct" value="{{out5}}" readonly>
+                        </div>
+                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label>1 cent</label>
+                            <input type="number" min="0" class="form-control" name="in6" placeholder="Aantal 1ct" value="0">
+                            <input type="text" min="0" class="form-control" name="out6" placeholder="Totaal van de 1ct" value="{{out6}}" readonly>
+                        </div>
+                     </div>
+                </div>
             </div>
             <div class="form-row">
                 <div class="col">
@@ -66,7 +82,7 @@
             </div>
            <div class="row">
                <div class=" col-md-12">
-                     <button type="submit" class="btn btn-success">Submit</button>
+                     <button type="submit" class="btn btn-success">Registreer</button>
                </div>
            </div>
         </form>

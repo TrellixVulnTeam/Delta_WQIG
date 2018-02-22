@@ -1,8 +1,14 @@
-  <ul class="nav">
+  <ul class="nav" style="">
       <li class="nav-item ">
-        <a class="nav-link" href="{{ url_for('kassa_home')}}">Home <span class="sr-only">(current)</span></a>
+        <a style="color:#45B649" class="nav-link" href="{{ url_for('kassa_home')}}">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item ">
-        <a class="nav-link" href="{{ url_for('kassa_coins')}}">Transacties<span class="sr-only">(current)</span></a>
+        <a style="color:#45B649" class="nav-link" href="{{ url_for('kassa_coins')}}">Munten Registreren<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item ">
+        <a style="color:#45B649" class="nav-link" href="{{ url_for('kassa_trans')}}">Transacties<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item ">
+        <a style="color:#45B649" class="nav-link" href="{{ url_for('logout')}}">Logout<span class="sr-only">(current)</span></a>
       </li>
   </ul>

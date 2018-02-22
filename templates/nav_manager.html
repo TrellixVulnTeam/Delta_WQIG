@@ -1,7 +1,17 @@
-<nav class="navbar navbar-light bg-faded">
-  <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="{{ url_for('manager_home')}}">Home <span class="sr-only">(current)</span></a>
+  <ul class="nav" style="">
+      <li class="nav-item ">
+        <a style="color:#45B649" class="nav-link" href="{{ url_for('manager_home')}}">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item ">
+        <a style="color:#45B649" class="nav-link" href="{{ url_for('manager_coins')}}">Munten Registreren<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item ">
+        <a style="color:#45B649" class="nav-link" href="{{ url_for('manager_clients')}}">Clienten<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item ">
+        <a style="color:#45B649" class="nav-link" href="{{ url_for('manager_trans')}}">Transacties<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item ">
+        <a style="color:#45B649" class="nav-link" href="{{ url_for('logout')}}">Logout<span class="sr-only">(current)</span></a>
       </li>
   </ul>
-</nav>
