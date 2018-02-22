@@ -74,6 +74,13 @@ def kassa_home():
         return 'nope'
 
 
+@app.route('/kassa/transacties', methods=["GET", "POST"])
+def kassa_trans():
+    return render_template('kassa_trans.html')
+
+
+
+
 if __name__ == '__main__':
     app.secret_key = os.urandom(24)
     app.run(debug=True)
