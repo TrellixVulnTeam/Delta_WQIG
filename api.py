@@ -62,7 +62,24 @@ def manager_home():
 
 @app.route('/manager/coins')
 def manager_coins():
-    return render_template('manager_coins.html')
+    if 'id' in session:
+        if session['level'] == 1:
+            try:
+                cursor = mysql.connect.cursor()
+                cursor.execute("""SELECT coin.id, coin.1cent, coin.5cent, coin.10cent, coin.25cent
+                                coin.100cent, coin.250cent, coin.total, coin.date, user.username
+                               FROM coin
+                               INNER JOIN user
+                               ON coin.user_id = user.id
+                               """)
+                coins = cursor.fetchall()
+                return render_template('manager_coins.html', coins=coins)
+            except Exception as e:
+                return render_template('manager_coins.html', error = str(e))
+        else:
+            return 'geen access'
+    else:
+        return 'nope'
 
 
 @app.route('/manager/clienten')
@@ -132,7 +149,30 @@ def addClient():
 
 @app.route('/manager/transacties')
 def manager_trans():
-    return render_template('manager_trans.html')
+    if 'id' in session:
+        if session['level'] == 1:
+            try:
+                cursor_opname = mysql.connect.cursor()
+                cursor_stort= mysql.connect.cursor()
+                cursor_stort.execute("""SELECT 
+                               FROM transactions
+                               INNER JOIN accounts
+                               ON transactions.account_id = accounts.client_id
+                               """)
+                storting =  cursor_stort.fetchall()
+                cursor_opname.execute("""SELECT 
+                                FROM clients
+                                INNER JOIN accounts
+                                ON clients.id = accounts.client_id
+                                """)
+                opnames = cursor.fetchall()
+                return render_template('manager_trans.html', storting=storting, opnames=opnames)
+            except Exception as e:
+                return render_template('manager_trans.html', error = str(e))
+        else:
+            return 'geen access'
+    else:
+        return 'nope'
 
 
 @app.route('/kassa', methods=["GET", "POST"])
