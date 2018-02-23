@@ -66,16 +66,15 @@ def manager_coins():
         if session['level'] == 1:
             try:
                 cursor = mysql.connect.cursor()
-                cursor.execute("""SELECT coin.id, coin.1cent, coin.5cent, coin.10cent, coin.25cent
-                                coin.100cent, coin.250cent, coin.total, coin.date, user.username
-                               FROM coin
-                               INNER JOIN user
-                               ON coin.user_id = user.id
-                               """)
+                cursor.execute("""SELECT coin.id,coin.1cent,coin.5cent,coin.10cent,coin.25cent,coin.100cent,coin.250cent,coin.total,coin.date,users.username
+                                  FROM coin
+                                  INNER JOIN users
+                                  ON users.id = coin.user_id  
+                                  """)
                 coins = cursor.fetchall()
                 return render_template('manager_coins.html', coins=coins)
             except Exception as e:
-                return render_template('manager_coins.html', error = str(e))
+                return render_template('manager_coins.html', error=str(e))
         else:
             return 'geen access'
     else:
@@ -89,15 +88,13 @@ def manager_clients():
             try:
                 cursor = mysql.connect.cursor()
                 cursor.execute("""SELECT clients.*, accounts.account_number, accounts.saldo
-                               FROM clients
-                               INNER JOIN accounts
-                               ON clients.id = accounts.client_id
-                               """)
+                                               FROM clients
+                                               INNER JOIN accounts
+                                               ON clients.id = accounts.client_id
+                                               """)
                 data = cursor.fetchall()
                 return render_template('manager_clients.html', data=data)
-                # return str(data)
             except Exception as e:
-                # return render_template('manager_clients.html', error = str(e))
              return e
         else:
             return 'geen access'
@@ -149,33 +146,60 @@ def addClient():
         return render_template('clienten.html')
 
 
-@app.route('/manager/transacties')
-def manager_trans():
+@app.route('/manager/transacties/dag')
+def manager_trans_dag():
     if 'id' in session:
         if session['level'] == 1:
             try:
+                cursor_stort = mysql.connect.cursor()
                 cursor_opname = mysql.connect.cursor()
-                cursor_stort= mysql.connect.cursor()
-                cursor_stort.execute("""SELECT 
-                               FROM transactions
-                               INNER JOIN accounts
-                               ON transactions.account_id = accounts.client_id
-                               """)
-                storting =  cursor_stort.fetchall()
-                cursor_opname.execute("""SELECT 
-                                FROM clients
-                                INNER JOIN accounts
-                                ON clients.id = accounts.client_id
-                                """)
-                opnames = cursor.fetchall()
-                return render_template('manager_trans.html', storting=storting, opnames=opnames)
+
+                cursor_stort.execute("""SELECT transactions.id, transactions.amount, accounts.account_number 
+                                        FROM transactions INNER JOIN accounts ON transactions.account_id = accounts.account_id 
+                                        WHERE transactions.type =1 AND transactions.date = CURRENT_DATE """)
+
+                cursor_opname.execute("""SELECT transactions.id, transactions.amount, accounts.account_number 
+                                        FROM transactions INNER JOIN accounts ON transactions.account_id = accounts.account_id 
+                                        WHERE transactions.type =2 AND transactions.date = CURRENT_DATE """)
+                storting = cursor_stort.fetchall()
+                opname = cursor_opname.fetchall()
+
+                return render_template('manager_trans_dag.html', storting=storting, opname=opname)
             except Exception as e:
-                return render_template('manager_trans.html', error = str(e))
+                return e
         else:
             return 'geen access'
     else:
         return 'nope'
 
+
+@app.route('/manager/transacties/maand')
+def manager_trans_mnd():
+    if 'id' in session:
+        if session['level'] == 1:
+            try:
+                cursor_stort = mysql.connect.cursor()
+                cursor_opname = mysql.connect.cursor()
+
+                cursor_stort.execute("""SELECT transactions.id, transactions.date, transactions.amount, accounts.account_number 
+                                        FROM transactions INNER JOIN accounts ON transactions.account_id = accounts.account_id 
+                                        WHERE transactions.type =1 AND transactions.date BETWEEN (CURRENT_DATE() - INTERVAL 1 MONTH) 
+                                        AND CURRENT_DATE() ORDER BY transactions.date DESC""")
+
+                cursor_opname.execute("""SELECT transactions.id, transactions.date, transactions.amount, accounts.account_number 
+                                        FROM transactions INNER JOIN accounts ON transactions.account_id = accounts.account_id 
+                                        WHERE transactions.type =2 AND transactions.date BETWEEN (CURRENT_DATE() - INTERVAL 1 MONTH) 
+                                        AND CURRENT_DATE() ORDER BY transactions.date DESC""")
+                storting = cursor_stort.fetchall()
+                opname = cursor_opname.fetchall()
+
+                return render_template('manager_trans_mnd.html', storting=storting, opname=opname)
+            except Exception as e:
+                return e
+        else:
+            return 'geen access'
+    else:
+        return 'nope'
 
 @app.route('/kassa', methods=["GET", "POST"])
 def kassa_home():

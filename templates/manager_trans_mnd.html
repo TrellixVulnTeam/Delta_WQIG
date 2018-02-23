@@ -19,9 +19,8 @@
                 <tr>
                     <td>#</td>
                     <td>Datum</td>
-                    <td>Client</td>
-                    <td>Account</td>
-                    <td>Amount</td>
+                    <td>Saldo</td>
+                    <td>Rekening</td>
                 </tr>
                 </thead>
                     <tbody>
@@ -42,13 +41,13 @@
                 <tr>
                     <td>#</td>
                     <td>Datum</td>
-                    <td>Client</td>
-                    <td>Account</td>
-                    <td>Amount</td>
+                    <td>Saldo</td>
+                    <td>Rekening</td>
+
                 </tr>
                 </thead>
                     <tbody>
-                        {% for row in opnames %}
+                        {% for row in opname %}
                         <tr>
                             {% for o in row %}
                                 <td>{{o}}</td>
