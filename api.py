@@ -82,21 +82,23 @@ def manager_coins():
         return 'nope'
 
 
-@app.route('/manager/clienten')
+@app.route('/manager/clienten',methods=["GET", "POST"])
 def manager_clients():
     if 'id' in session:
         if session['level'] == 1:
             try:
                 cursor = mysql.connect.cursor()
-                cursor.execute("""SELECT clients.id, clients.name, clients.surname, accounts.account_number, accounts.amount
+                cursor.execute("""SELECT clients.*, accounts.account_number, accounts.saldo
                                FROM clients
                                INNER JOIN accounts
                                ON clients.id = accounts.client_id
                                """)
                 data = cursor.fetchall()
                 return render_template('manager_clients.html', data=data)
+                # return str(data)
             except Exception as e:
-                return render_template('manager_clients.html', error = str(e))
+                # return render_template('manager_clients.html', error = str(e))
+             return e
         else:
             return 'geen access'
     else:

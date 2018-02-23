@@ -18,14 +18,15 @@
 
         <table class="table" style="margin-top: 2%;">
             <thead>
-            <tr>
-                <td>#</td>
-                <td>Naam</td>
-                <td>Achternaam</td>
-                <td>Rekening #</td>
-                <td>Saldo</td>
-            </tr>
+                <tr>
+                    <td>#</td>
+                    <td>Naam</td>
+                    <td>Achternaam</td>
+                    <td>Rekening nummer</td>
+                    <td>Saldo</td>
+                </tr>
             </thead>
+
                 <tbody>
                     {% for row in data %}
                     <tr>
@@ -78,10 +79,16 @@
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
     <script>
+<<<<<<< HEAD
         $(document).ready(function() {
             $('table').DataTable( {
             } );
         } );
+=======
+        $(document).ready(function(){
+        $('table').dataTable();
+    });
+>>>>>>> ad1ecd20cbddf7bf1b3d1fe3e4fa3f8968a5e1c2
     </script>
 </body>
 </html>
