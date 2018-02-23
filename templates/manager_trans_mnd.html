@@ -13,7 +13,7 @@
     <header>{% include 'nav_manager.html' %} </header>
     <div class="container">
         <div style="margin-top: 5%;">
-            <h3>Stortingen</h3>
+            <h3>Stortingen Per Maand</h3>
             <table class="table">
                 <thead>
                 <tr>
@@ -35,7 +35,7 @@
                 </table>
             </div>
         <div style="margin-top: 5%;">
-            <h3>Opnames</h3>
+            <h3>Opnames Per Maand</h3>
             <table class="table">
                 <thead>
                 <tr>
@@ -68,6 +68,7 @@
     <script>
         $(document).ready(function() {
             $('table').DataTable( {
+                "bLengthChange": false
             } );
         } );
     </script>
