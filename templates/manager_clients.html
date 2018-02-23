@@ -3,13 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>DeltaBank||Manager</title>
-</head>
-<body>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
@@ -25,24 +18,24 @@
         
         <table class="table" style="margin-top: 2%;">
             <thead>
-            <tr>
-                <td>#</td>
-                <td>Naam</td>
-                <td>Achternaam</td>
-                <td>Rekening #</td>
-                <td>Saldo</td>
-            </tr>
+                <tr>
+                    <td>#</td>
+                    <td>Naam</td>
+                    <td>Achternaam</td>
+                    <td>Rekening nummer</td>
+                    <td>Saldo</td>
+                </tr>
             </thead>
-                <tbody>
-                    {% for row in data %}
-                    <tr>
-                    {% for d in row %}
-                        <td>{{ d }}</td>
-                    {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                {% for d in row %}
+                    <td>{{ d }}</td>
+                {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <div class="modal fade" id="addClient">
@@ -84,10 +77,10 @@
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
-    <!--<script>-->
-        <!--$(document).ready(function(){-->
-        <!--$('table').DataTable();-->
-    <!--});-->
-    <!--</script>-->
+    <script>
+        $(document).ready(function(){
+        $('table').dataTable();
+    });
+    </script>
 </body>
 </html>
